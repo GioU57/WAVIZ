@@ -12,7 +12,7 @@ samplerate, data = wavfile.read(wav_fname)
 print(f"number of channels = {data.shape[len(data.shape) - 1]}")
 print(f'this is data shape {data.shape}')
 print(f"sample rate = {samplerate}Hz")
-length = data.shape[0] / samplerate
+length = (data.shape[0] * 10)  / samplerate
 print(f"length = {length}s")
 time = np.linspace(0., length, data.shape[0])
 plt.plot(time, data[:, 0], label="Left channel")
