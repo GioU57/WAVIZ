@@ -1,142 +1,74 @@
-from tkinter import *
-from tkinter import ttk,filedialog,messagebox
-import base64
-import json
-from pathlib import Path
-
-from bs4 import BeautifulSoup
-import requests
+import tkinter as tk
+from matplotlib import figure
+from numpy import *
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 
 config = {}
 
+class AudioGUI: # execute logic if run directly
+    def __init__(self):
+        self._root = tk.Tk() # instantiate instance of Tk class
+        self._root.title('Audio File Processor')
+        self._root.iconbitmap("WAVIS.ico")
+        self.LoadBtn = tk.Button(self._root, text="Load Audio File (WAV/MP3)", command=self.print_ligma())
 
-def fetch_url():
-    print("Temporary")
-    return 0
+    def start_gui(self):
+        self._root.mainloop()
 
-def fetch_images(soup, base_url):
-    print("Temporary")
-    return 0
+    def create_gui(self):
+        #Create the window and establish close condition.
+        self._root.title("Hello")
+        self._root.deiconify()
+        self._root.geometry("500x350")
+        #self._root.protocol("WM_DELETE_WINDOW", exit(0))
 
-def fetch_title():
-    print("Temporary")
-    return 0
-def fetch_link():
-    print("Temporary")
-    return 0
-
-
-def save():
-    print("Temporary")
-    return 0
-
-def save_images(dirname):
-    print("Temporary")
-    return 0
+        self._top_frame = tk.Frame(self._root)
+        self._top_frame.pack(side=tk.TOP, pady=20)
+        self.LoadBtn.pack(padx=10)
 
 
-def save_json(filename):
-    print("Temporary")
-    return 0
+        high_freq_radio= tk.Radiobutton(self._top_frame, text='High Frequency', variable=self.print_ligma(), value='high')
+        high_freq_radio.grid(row=0, column=1,padx=5, pady=2, sticky="W")
 
+        med_freq_radio = tk.Radiobutton(self._top_frame, text='Mid Frequency', variable=self.print_ligma(),value='med')
+        med_freq_radio.grid(row=0, column=2, padx=5, pady=2, sticky="W")
 
-def sb(msg):
-    _status_msg.set(msg)
+        low_freq_radio = tk.Radiobutton(self._top_frame, text='Low Frequency', variable=self.print_ligma(),value='low')
+        low_freq_radio.grid(row=0, column=3, padx=5, pady=2, sticky="W")
 
+        high_freq_radio.configure(state='normal')
 
-def alert(msg):
-    messagebox.showinfo(message=msg)
+        self.graph_frame = tk.Frame(self._root)
+        self.graph_frame.pack(side=tk.BOTTOM, pady=20)
+        
+        #Set up the frame for the details about the graph supporting text. 
+        #Accessed from the Plot_Data function.
+        self.status_frame = tk.Frame(self._root)
+        self.status_frame.pack(side=tk.BOTTOM, pady=10)
 
+        self.Plot_Data()
 
-if __name__ == "__main__": # execute logic if run directly
-    _root = Tk() # instantiate instance of Tk class
-    _root.title('Audio File Processor')
-    _mainframe = ttk.Frame(_root, padding='5 5 5 5 ') # root is parent of frame
-    _mainframe.grid(row=0, column=0, sticky=("E", "W", "N", "S")) # placed on first row,col of parent
-    # frame can extend itself in all cardinal directions
-    _url_frame = ttk.LabelFrame(
-        _mainframe, text='Audio File:', padding='5 5 5 5') # label frame
-    _url_frame.grid(row=0, column=0, sticky=("E","W")) # only expands E W
-    _url_frame.columnconfigure(0, weight=1)
-    _url_frame.rowconfigure(0, weight=1) # behaves when resizing
+        
 
-    _url = StringVar()
-    _url.set('~~~~~') # sets initial value of _url
-    _url_entry = ttk.Entry(
-        _url_frame, width=40, textvariable=_url) # text box
-    _url_entry.grid(row=0, column=0, sticky=(E, W, S, N), padx=5)
-    # grid mgr places object at position
-    _fetch_btn = ttk.Button(
-        _url_frame, text='Fetch info', command=fetch_url) # create button
-    # fetch_url() is callback for button press
-
-    _fetch_btn.grid(row=0, column=1, sticky=W, padx=5)
-    _fetch_img_btn = ttk.Button(
-        _url_frame, text='Save File', command=fetch_url)
-    _fetch_img_btn.grid(row=0, column=1, sticky=W, padx=5)
-
-    _fetch_title_btn = ttk.Button(
-        _url_frame, text='Load File', command=fetch_title)
-    _fetch_title_btn.grid(row=1, column=1, sticky=W, padx=5)
     
-    _fetch_link_btn = ttk.Button(
-        _url_frame, text='Plot', command=fetch_link)
-    _fetch_link_btn.grid(row=2, column=1, sticky=W, padx=5)
+    def Plot_Data(self):
+        self.graphs = [0]
+        #self.canvas = FigureCanvasTkAgg(self.graphs[0], master=self._root)
 
-    # img_frame contains Lisbox and Radio Frame
-    _img_frame = ttk.LabelFrame(
-        _mainframe, text='Graph', padding='9 0 0 0')
-    _img_frame.grid(row=1, column=0, sticky=(N, S, E, W))
+        time_status = tk.Label(self._root, text="Time: " + "foo"+ " seconds")
+        
+        time_status.pack(side=tk.BOTTOM)
+        temp_status = tk.Label(self._root, text="Other Thing: " + "foo"+ " units")
+        temp_status.pack(side=tk.BOTTOM)
+        
+        temp2_status = tk.Label(self._root, text="Other Other Thing: " + "foo"+ " units")
+        temp2_status.pack(side=tk.BOTTOM)
 
-    # Set _img_frame as parent of Listbox and _images is variable tied to
-    _images = StringVar()
-    _img_listbox = Listbox(
-        _img_frame, listvariable=_images, height=6, width=25)
-    _img_listbox.grid(row=0, column=0, sticky=(E, W), pady=5)
-    #Scrollbar can move vertical
-    _scrollbar = ttk.Scrollbar(
-        _img_frame, orient=VERTICAL, command=_img_listbox.yview)
-    _scrollbar.grid(row=0, column=1, sticky=(S, N), pady=6)
-    _img_listbox.configure(yscrollcommand=_scrollbar.set)
+        
 
-    #Listbox occupies (0,0) on _img_frame.
-    # Scrollbar occupies (0,1) so _radio_frame goes to (0,2)
-    _radio_frame = ttk.Frame(_img_frame)
-    _radio_frame.grid(row=0, column=2, sticky=(N, S, W, E))
 
-    # place label and padding
-    # radio buttons are children of _radio_frame
-    _choice_lbl = ttk.Label(
-        _radio_frame, text="Choose how to load graph")
-    _choice_lbl.grid(row=0, column=0, padx=5, pady=5)
-    _save_method = StringVar()
-    _save_method.set('img')
-    # Radiobutton connected to _save_method variable
-    # Know which button is selected by checking value
-    _img_only_radio = ttk.Radiobutton(
-        _radio_frame, text='High Frequency', variable=_save_method,
-        value='img')
-    _img_only_radio.grid(row=1, column=0,padx=5, pady=2, sticky="W")
-    _img_only_radio.configure(state='normal')
-    _json_radio = ttk.Radiobutton(
-        _radio_frame, text='Low Frequency', variable=_save_method,
-        value='json')
-    _json_radio.grid(row=2, column=0, padx=5, pady=2, sticky="W")
 
-    # save command saves images to be listed in Listbox after parsing
-    _scrape_btn = ttk.Button(
-        _mainframe, text='Scrape!', command=save)
-    _scrape_btn.grid(row=2, column=0, sticky=E, pady=5)
 
-    _status_frame = ttk.Frame(
-        _root, relief='sunken', padding='2 2 2 2')
-    _status_frame.grid(row=1, column=0, sticky=("E", "W", "S"))
-    _status_msg = StringVar() # need modified when update status text
-    _status_msg.set('Tye a URL to start scraping...')
-    _status= ttk.Label(
-        _status_frame, textvariable=_status_msg, anchor=W)
-    _status.grid(row=0, column=0, sticky=(E, W))
-
-    _root.mainloop() # listens for events, blocks any code that comes after it
-
+    def print_ligma(self):
+        print("ligma")
