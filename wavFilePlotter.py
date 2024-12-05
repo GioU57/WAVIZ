@@ -1,3 +1,4 @@
+
 from scipy.io import wavfile
 import scipy.io
 import wave 
@@ -20,4 +21,3 @@ plt.plot(time, data[:, 1], label="Right channel")
 plt.legend()
 plt.xlabel("Time [s]")
 plt.ylabel("Amplitude")
-plt.show()
