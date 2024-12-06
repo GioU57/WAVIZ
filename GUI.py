@@ -1,8 +1,9 @@
 import tkinter as tk
 from matplotlib import figure
 from numpy import *
+from tkinter.filedialog import askopenfilename
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-
+from filePlotter import *
 
 config = {}
 
@@ -11,48 +12,87 @@ class AudioGUI: # execute logic if run directly
         self._root = tk.Tk() # instantiate instance of Tk class
         self._root.title('Audio File Processor')
         self._root.iconbitmap("WAVIS.ico")
-        self.LoadBtn = tk.Button(self._root, text="Load Audio File (WAV/MP3)", command=self.print_ligma())
+        self.wave_plot = None
+        self.file_path = None
+        self.file_name = tk.StringVar()
+
+        self.model = None
 
     def start_gui(self):
         self._root.mainloop()
 
     def create_gui(self):
+        
         #Create the window and establish close condition.
-        self._root.title("Hello")
         self._root.deiconify()
-        self._root.geometry("500x350")
-        #self._root.protocol("WM_DELETE_WINDOW", exit(0))
+        self._root.resizable(False, False)
+        self._root.geometry("800x600")
+        self.file_path=tk.StringVar()
+        
+        #self.name_entry = tk.Entry(self._root,textvariable = file_path, font=('calibre',10,'normal'))
+
+        self.LoadBtn = tk.Button(self._root, text="Load Audio File (WAV/MP3)", command=self.print_ligma)
+        
+        #Establishes the title top frame which organizes the buttons in the GUI
 
         self._top_frame = tk.Frame(self._root)
         self._top_frame.pack(side=tk.TOP, pady=20)
         self.LoadBtn.pack(padx=10)
 
+        self.button_frame = tk.Frame(self._root)
+        self.button_frame.pack(side=tk.TOP, anchor = "n")
 
-        high_freq_radio= tk.Radiobutton(self._top_frame, text='High Frequency', variable=self.print_ligma(), value='high')
+
+
+        #self.name_entry.pack(padx=10)
+
+        high_freq_radio= tk.Button(self.button_frame, text='High Frequency', command = self.print_ligma)
         high_freq_radio.grid(row=0, column=1,padx=5, pady=2, sticky="W")
 
-        med_freq_radio = tk.Radiobutton(self._top_frame, text='Mid Frequency', variable=self.print_ligma(),value='med')
+        med_freq_radio = tk.Button(self.button_frame, text='Mid Frequency', command = self.print_ligma)
         med_freq_radio.grid(row=0, column=2, padx=5, pady=2, sticky="W")
 
-        low_freq_radio = tk.Radiobutton(self._top_frame, text='Low Frequency', variable=self.print_ligma(),value='low')
+        low_freq_radio = tk.Button(self.button_frame, text='Low Frequency', command = self.Plot_Low)
         low_freq_radio.grid(row=0, column=3, padx=5, pady=2, sticky="W")
 
-        high_freq_radio.configure(state='normal')
+        waveform_button = tk.Button(self.button_frame, text='Waveform', command = self.print_ligma)
+        waveform_button.grid(row=0, column=4, padx=5, pady=2, sticky="W")
 
-        self.graph_frame = tk.Frame(self._root)
-        self.graph_frame.pack(side=tk.BOTTOM, pady=20)
+        spectro_button = tk.Button(self.button_frame, text='Spectrogram', command = self.print_ligma)
+        spectro_button.grid(row=0, column=5, padx=5, pady=2, sticky="W")
+
         
         #Set up the frame for the details about the graph supporting text. 
         #Accessed from the Plot_Data function.
         self.status_frame = tk.Frame(self._root)
         self.status_frame.pack(side=tk.BOTTOM, pady=10)
 
-        self.Plot_Data()
+        self.file_label = tk.Label(self.status_frame, text= "")
+        self.file_label.pack(side=tk.BOTTOM)
 
         
 
-    
     def Plot_Data(self):
+        if self.wave_plot is not None:
+            self.wave_plot.get_tk_widget().pack_forget()
+        self.wave_plot =  FigureCanvasTkAgg(self.model.plot_spectrogram(),master = self._top_frame)
+        self.wave_plot.draw()
+
+        self.wave_plot.get_tk_widget().pack(side=tk.BOTTOM, fill = tk.BOTH, expand=1)
+    
+
+
+    def Plot_Low(self):
+        if self.wave_plot is not None:
+            self.wave_plot.get_tk_widget().pack_forget()
+        self.wave_plot =  FigureCanvasTkAgg(self.model.plot_waveform(),master = self._top_frame)
+        self.wave_plot.draw()
+
+        self.wave_plot.get_tk_widget().pack(side=tk.BOTTOM, fill = tk.BOTH, expand=1)
+
+
+
+    def Other_Plot_Data(self):
         self.graphs = [0]
         #self.canvas = FigureCanvasTkAgg(self.graphs[0], master=self._root)
 
@@ -71,4 +111,16 @@ class AudioGUI: # execute logic if run directly
 
 
     def print_ligma(self):
-        print("ligma")
+        self.file_path = askopenfilename(filetypes=[("Audio Files",".wav .mp3")])
+        self.file_name.set("{} : {}s".format(self.file_path, 4))
+        self.file_label.config(text = self.file_name.get())
+        
+        self.model = Model()
+
+        self.model.preprocess(self.file_path)
+
+        if self.file_path != "":
+            self.Plot_Data()
+        
+
+
