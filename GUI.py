@@ -58,7 +58,7 @@ class AudioGUI: # execute logic if run directly
         waveform_button = tk.Button(self.button_frame, text='Waveform', command = self.print_ligma)
         waveform_button.grid(row=0, column=4, padx=5, pady=2, sticky="W")
 
-        spectro_button = tk.Button(self.button_frame, text='Spectrogram', command = self.print_ligma)
+        spectro_button = tk.Button(self.button_frame, text='Spectrogram', command = self.Plot_spectrogram)
         spectro_button.grid(row=0, column=5, padx=5, pady=2, sticky="W")
 
         
@@ -75,11 +75,18 @@ class AudioGUI: # execute logic if run directly
     def Plot_Data(self):
         if self.wave_plot is not None:
             self.wave_plot.get_tk_widget().pack_forget()
-        self.wave_plot =  FigureCanvasTkAgg(self.model.plot_spectrogram(),master = self._top_frame)
+        self.wave_plot =  FigureCanvasTkAgg(self.model.plot_waveform(),master = self._top_frame)
         self.wave_plot.draw()
 
         self.wave_plot.get_tk_widget().pack(side=tk.BOTTOM, fill = tk.BOTH, expand=1)
-    
+
+    def Plot_spectrogram(self):
+        if self.wave_plot is not None:
+            self.wave_plot.get_tk_widget().pack_forget()
+        self.wave_plot =  FigureCanvasTkAgg(self.model.plot_spectrogram(),master = self._top_frame)
+        self.wave_plot.draw()
+        self.wave_plot.get_tk_widget().pack(side=tk.BOTTOM, fill = tk.BOTH, expand=1)
+
 
 
     def Plot_Low(self):

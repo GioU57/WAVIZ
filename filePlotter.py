@@ -7,52 +7,44 @@ from util import *
 
 class Model:
     def __init__(self):
+        self.file = None
         self.sample_rate, self.data, self.mono = None, None, None
+        self.duration = None
 
     def preprocess(self, filepath):
         if filepath != "":
             self.file = filepath
             self.sample_rate, self.data, self.mono = check_filetype(filepath)
+            self.duration = self.data.shape[0] / self.sample_rate
+
         else:
             print("Code broke ur cirnge")
+        return self.duration
 
 
     def plot_waveform(self):
-        try:
-            self.sample_rate,self.data = wavfile.read(self.file_path)
-            if self.data is None:
-                return None
-            f, t, Sxx = spectrogram(self.data, fs=self.sample_rate, nperseg=1024)
-            fig = plt.Figure(figsize=(8, 4))
-            ax = fig.add_subplot(111)
-            pcm = ax.pcolormesh(t, f, 10 * np.log10(Sxx), shading="gouraud", cmap="viridis")
-            fig.colorbar(pcm, ax=ax, label="Intensity (dB)")
-            ax.set_title("Spectrogram")
-            ax.set_xlabel("Time (s)")
-            ax.set_ylabel("Frequency (Hz)")
-            return fig
-        
-        except Exception as e:
-            print(f"Error plotting spectrogram: {e}")
-            return None     
-            time = np.linspace(0, len(self.mono) / self.sample_rate, len(self.mono))
-            fig = plt.Figure(figsize=(8, 4))
-            ax = fig.add_subplot(111)
-            ax.plot(time, self.mono, label="Waveform", color="blue")
+        time = np.linspace(0., self.duration, self.data.shape[0])
+        fig = plt.Figure(figsize=(8, 4),dpi=100)
+        ax = fig.add_subplot(111)
+        if len(self.data.shape) > 1:
+            ax.plot(time, self.data[:, 0], label="Left Channel", color="red")
+            ax.plot(time, self.data[:, 1], label="Right Channel", color="blue")
             ax.set_title("Waveform")
             ax.set_xlabel("Time (s)")
             ax.set_ylabel("Amplitude")
             ax.legend()
             ax.grid(True)
-            return fig
-        except Exception as e:
-            print(f"Error plotting waveform: {e}")
-            return None
+        else:
+            ax.plot(time, self.mono)
+            ax.set_title("Waveform")
+            ax.set_xlabel("Time (s)")
+            ax.set_ylabel("Amplitude")
+            ax.legend()
+            ax.grid(True)
+        return fig
+
         
     def plot_spectrogram(self):
-        self.sample_rate,self.data = wavfile.read(self.file_path)
-        if self.data is None:
-            return None
         f, t, Sxx = spectrogram(self.data, fs=self.sample_rate, nperseg=1024)
         fig = plt.Figure(figsize=(8, 4))
         ax = fig.add_subplot(111)
