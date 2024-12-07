@@ -67,12 +67,12 @@ class Model:
             ax = fig.add_subplot(111)
             ax.plot(x, y, label="RT60 Line Graph", color="black")
             if highlight_point == "low":
-                ax.scatter([x[np.argmin(y)]], [np.min(y)], color="blue", label="Low Point")
+                ax.scatter([x[np.argmin(y)]], [np.min(y)], color="cadetblue", label="Low Point")
             elif highlight_point == "mid":
                 mid_idx = len(x) // 2
-                ax.scatter([x[mid_idx]], [y[mid_idx]], color="green", label="Mid Point")
+                ax.scatter([x[mid_idx]], [y[mid_idx]], color="lime", label="Mid Point")
             elif highlight_point == "high":
-                ax.scatter([x[np.argmax(y)]], [np.max(y)], color="red", label="High Point")
+                ax.scatter([x[np.argmax(y)]], [np.max(y)], color="tomato", label="High Point")
             ax.set_title(title)
             ax.set_xlabel("Time (s)")
             ax.set_ylabel("Amplitude")
