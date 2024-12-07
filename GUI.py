@@ -46,20 +46,23 @@ class AudioGUI: # execute logic if run directly
 
         #self.name_entry.pack(padx=10)
 
-        high_freq_radio= tk.Button(self.button_frame, text='High Frequency', command = self.print_ligma)
+        high_freq_radio= tk.Button(self.button_frame, text='High Frequency', command = self.plot_high)
         high_freq_radio.grid(row=0, column=1,padx=5, pady=2, sticky="W")
 
-        med_freq_radio = tk.Button(self.button_frame, text='Mid Frequency', command = self.print_ligma)
+        med_freq_radio = tk.Button(self.button_frame, text='Mid Frequency', command = self.plot_mid)
         med_freq_radio.grid(row=0, column=2, padx=5, pady=2, sticky="W")
 
-        low_freq_radio = tk.Button(self.button_frame, text='Low Frequency', command = self.Plot_Low)
+        low_freq_radio = tk.Button(self.button_frame, text='Low Frequency', command = self.plot_low)
         low_freq_radio.grid(row=0, column=3, padx=5, pady=2, sticky="W")
 
-        waveform_button = tk.Button(self.button_frame, text='Waveform', command = self.print_ligma)
-        waveform_button.grid(row=0, column=4, padx=5, pady=2, sticky="W")
+        plot_all_rt60_button = tk.Button(self.button_frame, text='Plot  All RT60', command=self.plot_all)
+        plot_all_rt60_button.grid(row=0, column=4, padx=5, pady=2, sticky="W")
+
+        waveform_button = tk.Button(self.button_frame, text='Waveform', command = self.Plot_wave)
+        waveform_button.grid(row=0, column=5, padx=5, pady=2, sticky="W")
 
         spectro_button = tk.Button(self.button_frame, text='Spectrogram', command = self.Plot_spectrogram)
-        spectro_button.grid(row=0, column=5, padx=5, pady=2, sticky="W")
+        spectro_button.grid(row=0, column=6, padx=5, pady=2, sticky="W")
 
         
         #Set up the frame for the details about the graph supporting text. 
@@ -72,31 +75,56 @@ class AudioGUI: # execute logic if run directly
 
         
 
-    def Plot_Data(self):
-        if self.wave_plot is not None:
-            self.wave_plot.get_tk_widget().pack_forget()
-        self.wave_plot =  FigureCanvasTkAgg(self.model.plot_waveform(),master = self._top_frame)
-        self.wave_plot.draw()
+    def Plot_wave(self):
+        if self.file_path is not None:
+            if self.wave_plot is not None:
+                self.wave_plot.get_tk_widget().pack_forget()
+            self.wave_plot =  FigureCanvasTkAgg(self.model.plot_waveform(),master = self._top_frame)
+            self.wave_plot.draw()
 
-        self.wave_plot.get_tk_widget().pack(side=tk.BOTTOM, fill = tk.BOTH, expand=1)
+            self.wave_plot.get_tk_widget().pack(side=tk.BOTTOM, fill = tk.BOTH, expand=1)
 
     def Plot_spectrogram(self):
-        if self.wave_plot is not None:
-            self.wave_plot.get_tk_widget().pack_forget()
-        self.wave_plot =  FigureCanvasTkAgg(self.model.plot_spectrogram(),master = self._top_frame)
-        self.wave_plot.draw()
-        self.wave_plot.get_tk_widget().pack(side=tk.BOTTOM, fill = tk.BOTH, expand=1)
+        if self.file_path is not None:
+            if self.wave_plot is not None:
+                self.wave_plot.get_tk_widget().pack_forget()
+            self.wave_plot =  FigureCanvasTkAgg(self.model.plot_spectrogram(),master = self._top_frame)
+            self.wave_plot.draw()
+            self.wave_plot.get_tk_widget().pack(side=tk.BOTTOM, fill = tk.BOTH, expand=1)
 
 
 
-    def Plot_Low(self):
-        if self.wave_plot is not None:
-            self.wave_plot.get_tk_widget().pack_forget()
-        self.wave_plot =  FigureCanvasTkAgg(self.model.plot_waveform(),master = self._top_frame)
-        self.wave_plot.draw()
+    def plot_low(self):
+        if self.file_path is not None:
+            if self.wave_plot is not None:
+                self.wave_plot.get_tk_widget().pack_forget()
+            self.wave_plot =  FigureCanvasTkAgg(self.model.plot_low_rt60(),master = self._top_frame)
+            self.wave_plot.draw()
+            self.wave_plot.get_tk_widget().pack(side=tk.BOTTOM, fill = tk.BOTH, expand=1)
 
-        self.wave_plot.get_tk_widget().pack(side=tk.BOTTOM, fill = tk.BOTH, expand=1)
+    def plot_mid(self):
+        if self.file_path is not None:
+            if self.wave_plot is not None:
+                self.wave_plot.get_tk_widget().pack_forget()
+            self.wave_plot =  FigureCanvasTkAgg(self.model.plot_mid_rt60(),master = self._top_frame)
+            self.wave_plot.draw()
+            self.wave_plot.get_tk_widget().pack(side=tk.BOTTOM, fill = tk.BOTH, expand=1)
 
+    def plot_high(self):
+        if self.file_path is not None:
+            if self.wave_plot is not None:
+                self.wave_plot.get_tk_widget().pack_forget()
+            self.wave_plot =  FigureCanvasTkAgg(self.model.plot_high_rt60(),master = self._top_frame)
+            self.wave_plot.draw()
+            self.wave_plot.get_tk_widget().pack(side=tk.BOTTOM, fill = tk.BOTH, expand=1)
+
+    def plot_all(self):
+        if self.file_path is not None:
+            if self.wave_plot is not None:
+                self.wave_plot.get_tk_widget().pack_forget()
+            self.wave_plot =  FigureCanvasTkAgg(self.model.plot_high_rt60(),master = self._top_frame)
+            self.wave_plot.draw()
+            self.wave_plot.get_tk_widget().pack(side=tk.BOTTOM, fill = tk.BOTH, expand=1)
 
 
     def Other_Plot_Data(self):
@@ -127,7 +155,7 @@ class AudioGUI: # execute logic if run directly
         self.model.preprocess(self.file_path)
 
         if self.file_path != "":
-            self.Plot_Data()
+            self.Plot_wave()
         
 
 
