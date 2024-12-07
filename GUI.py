@@ -14,7 +14,10 @@ class AudioGUI: # execute logic if run directly
         self._root.iconbitmap("WAVIS.ico")
         self.wave_plot = None
         self.file_path = None
+
+        #Analysis variables
         self.file_name = tk.StringVar()
+        self.file_frequency = tk.StringVar()
 
         self.model = None
 
@@ -79,6 +82,14 @@ class AudioGUI: # execute logic if run directly
         if self.file_path is not None:
             if self.wave_plot is not None:
                 self.wave_plot.get_tk_widget().pack_forget()
+
+            #Plotting the wave function should also establish the values in the labels at the bottom of the figure,
+            #which displays values such as file name, time, resonant frequency, etc.
+
+            self.file_name.set(f'{self.file_path.split('/')[-1]} : {round(self.model.duration,3)} s \n{self.model.resonant_freq()} hertz')
+            self.file_label.config(text=self.file_name.get())
+
+
             self.wave_plot =  FigureCanvasTkAgg(self.model.plot_waveform(),master = self._top_frame)
             self.wave_plot.draw()
 
@@ -128,9 +139,6 @@ class AudioGUI: # execute logic if run directly
 
 
     def Other_Plot_Data(self):
-        self.graphs = [0]
-        #self.canvas = FigureCanvasTkAgg(self.graphs[0], master=self._root)
-
         time_status = tk.Label(self._root, text="Time: " + "foo"+ " seconds")
         
         time_status.pack(side=tk.BOTTOM)
@@ -147,9 +155,6 @@ class AudioGUI: # execute logic if run directly
 
     def print_ligma(self):
         self.file_path = askopenfilename(filetypes=[("Audio Files",".wav .mp3")])
-        self.file_name.set("{} : {}s".format(self.file_path, 4))
-        self.file_label.config(text = self.file_name.get())
-        
         self.model = Model()
 
         self.model.preprocess(self.file_path)

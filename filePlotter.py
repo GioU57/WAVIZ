@@ -7,6 +7,7 @@ from pydub import *
 from pydub import AudioSegment
 from scipy.signal import butter, filtfilt, welch
 from pathlib import Path
+from util import *
 
 
 class Model:
@@ -49,7 +50,7 @@ class Model:
 
         
     def plot_spectrogram(self):
-        f, t, Sxx = spectrogram(self.data, fs=self.sample_rate, nperseg=1024)
+        f, t, Sxx = spectrogram(self.mono, fs=self.sample_rate, nperseg=1024)
         fig = plt.Figure(figsize=(8, 4))
         ax = fig.add_subplot(111)
         pcm = ax.pcolormesh(t, f, 10 * np.log10(Sxx), shading="gouraud", cmap="viridis")
@@ -99,65 +100,7 @@ class Model:
             return None
         return self.plot_rt60("High RT60", highlight_point="high")
 
-#The following code was all adapted from the upper half of Util.py
-def bandpass_filter(data, lowcut, highcut, fs, order=4):
-    nyquist = 0.5 * fs
-    low = lowcut / nyquist
-    high = highcut / nyquist
-    b, a = butter(order, [low, high], btype='band')
-    return filtfilt(b, a, data)
-
-
-    # Check filetype
-def check_filetype(file):
-    extension = Path(file).suffix.lower()
-    if extension == ".wav":
-        sample_rate, data, mono = analyze_audio(file)
-    else:
-        sample_rate, data, mono = convert_file(file, extension)
-    return sample_rate, data, mono
-
-
-# Convert filetype
-def convert_file(file, extension):
-    if extension == ".mp3":
-        AudioSegment.from_mp3(file).export("newfile.wav", format="wav")
-        sample_rate, data, mono = analyze_audio("newfile.wav")
-        Path("newfile.wav").unlink()
-    elif extension == "ogg":
-        AudioSegment.from_ogg(file).export("newfile.wav", format="wav")
-        sample_rate, data, mono = analyze_audio("newfile.wav")
-        Path("newfile.wav").unlink()
-
-    return sample_rate, data, mono
-
-
-def analyze_audio(file):
-    sample_rate, data = wavfile.read(file)
-    if len(data.shape) == 2:
-        left_channel = data[:, 0]
-        right_channel = data[:, 1]
-        mono = (left_channel + right_channel)
-    else:
-        mono = data
-    return sample_rate, data, mono
-
-
-def reverb_time(data):
-    rt20 = t[index_of_max_less_5] - t[index_of_max_less_25]
-    rt60 = 3 * rt20
-    print(f'RT60 value is {round(rt60)}')
-
-
-def resonant_freq(data):
-    frequencies, power = welch(data, sample_rate, nperseg=4096)
-    dominant_frequency = frequencies[np.argmax(power)]
-    print(f'dominant frequency is {round(dominant_frequency)}Hz')
-
-
-def amplitude(data):
-    index_of_max = np.argmax(data_in_db)
-    value_of_max = data_in_db[index_of_max]
-    return value_of_max
-
-
+    def resonant_freq(self):
+        frequencies, power = welch(self.data, self.sample_rate, nperseg=4096)
+        dominant_frequency = frequencies[np.argmax(power)]
+        return round(dominant_frequency)
