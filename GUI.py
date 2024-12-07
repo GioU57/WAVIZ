@@ -155,7 +155,7 @@ class AudioGUI: # execute logic if run directly
 
     def print_ligma(self):
         self.file_path = askopenfilename(filetypes=[("Audio Files",".wav .mp3")])
-        #wow this is lit
+        #wow this is li
 
         self.model = Model()
 
