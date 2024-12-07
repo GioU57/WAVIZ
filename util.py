@@ -52,6 +52,7 @@ def find_nearest_value(array, value):
     return array[idx]
 
 def reverb_time(model):
+    # Reverb time
     value_of_max_less_5 = model.mono[np.argmax(model.mono)]-5
     value_of_max_less_5 = find_nearest_value(model.mono[value_of_max_less_5:], value_of_max_less_5)
     index_of_max_less_5 = np.where(model.mono == value_of_max_less_5)[0][0]
