@@ -16,6 +16,7 @@ class Model:
         self.sample_rate, self.data, self.mono = None, None, None
         self.duration = None
 
+    #Strip the data from the file passed from the GUI
     def preprocess(self, filepath):
         if filepath != "":
             self.file = filepath

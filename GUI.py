@@ -82,7 +82,7 @@ class AudioGUI: # execute logic if run directly
 
 
         
-
+    #Waveform plotter, utilized upon startup of the File Selection in GUI
     def Plot_wave(self):
         if self.file_path is not None:
             if self.wave_plot is not None:
