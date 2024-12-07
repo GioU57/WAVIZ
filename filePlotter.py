@@ -7,7 +7,7 @@ from pydub import *
 from pydub import AudioSegment
 from scipy.signal import butter, filtfilt, welch
 from pathlib import Path
-#hi
+
 
 class Model:
     def __init__(self):
@@ -78,6 +78,7 @@ class Model:
             ax.set_ylabel("Amplitude")
             ax.legend()
             ax.grid(True)
+
             return fig
 
         except Exception as e:
@@ -98,14 +99,13 @@ class Model:
         if self.mono is None:
             return None
         return self.plot_rt60("High RT60", highlight_point="high")
-
-#The following code was all adapted from the upper half of Util.py
-def bandpass_filter(data, lowcut, highcut, fs, order=4):
-    nyquist = 0.5 * fs
-    low = lowcut / nyquist
-    high = highcut / nyquist
-    b, a = butter(order, [low, high], btype='band')
-    return filtfilt(b, a, data)
+    #The following code was all adapted from the upper half of Util.py
+    def bandpass_filter(data, lowcut, highcut, fs, order=4):
+        nyquist = 0.5 * fs
+        low = lowcut / nyquist
+        high = highcut / nyquist
+        b, a = butter(order, [low, high], btype='band')
+        return filtfilt(b, a, data)
 
 
     # Check filetype
