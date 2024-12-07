@@ -76,6 +76,11 @@ class AudioGUI: # execute logic if run directly
         self.file_label = tk.Label(self.status_frame, text= "")
         self.file_label.pack(side=tk.BOTTOM)
 
+        self.model = Model()
+        self.model.preprocess("")
+
+
+
         
 
     def Plot_wave(self):
@@ -155,8 +160,6 @@ class AudioGUI: # execute logic if run directly
 
     def print_ligma(self):
         self.file_path = askopenfilename(filetypes=[("Audio Files",".wav .mp3")])
-        self.model = Model()
-
         self.model.preprocess(self.file_path)
 
         if self.file_path != "":

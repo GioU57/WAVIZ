@@ -6,14 +6,6 @@ from scipy.io import wavfile
 from scipy.signal import butter, filtfilt, welch
 from pathlib import Path
 
-# Band-pass filter function
-def bandpass_filter(data, lowcut, highcut, fs, order=4):
-    nyquist = 0.5 * fs
-    low = lowcut / nyquist
-    high = highcut / nyquist
-    b, a = butter(order, [low, high], btype='band')
-    return filtfilt(b, a, data)
-
 # Check filetype
 def check_filetype(file):
     extension = Path(file).suffix.lower()

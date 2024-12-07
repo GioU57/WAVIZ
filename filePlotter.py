@@ -60,45 +60,63 @@ class Model:
         ax.set_ylabel("Frequency (Hz)")
         return fig
 
-    def plot_rt60(self, title, highlight_point=None):#rt60 plot function
+    def plot_low_rt60(self):  # RT60 low plot function
+        if self.mono is None:
+            return None
+        # Apply bandpass filter for low frequencies (up to 250 Hz)
+        filtered_data = np.abs(self.bandpass_filter(self.mono, 1, 250, self.sample_rate))
+        return self.plot_rt60("Low RT60", highlight_point='low', data=filtered_data)
+
+    def plot_mid_rt60(self):  # RT60 mid plot function
+        if self.mono is None:
+            return None
+        # Apply bandpass filter for mid frequencies (250 Hz to 7 kHz)
+        filtered_data = np.abs(self.bandpass_filter(self.mono, 250, 7000, self.sample_rate))
+        return self.plot_rt60("Mid RT60", highlight_point='mid', data=filtered_data)
+
+    def plot_high_rt60(self):  # RT60 high plot function
+        if self.mono is None:
+            return None
+        # Apply bandpass filter for high frequencies (7 kHz to 15 kHz)
+        filtered_data = np.abs(self.bandpass_filter(self.mono, 7000, 15000, self.sample_rate))
+        return self.plot_rt60("High RT60", highlight_point='high', data=filtered_data)
+
+    def bandpass_filter(self, data, lowcut, highcut, fs, order=4):
+        nyquist = 0.5 * fs
+        low = lowcut / nyquist
+        high = highcut / nyquist
+        b, a = butter(order, [low, high], btype='band')
+        return filtfilt(b, a, data)
+
+    def plot_rt60(self, title, highlight_point=None, data=None):  # RT60 plot function
         try:
-            x = np.linspace(0, len(self.mono) / self.sample_rate, len(self.mono))
-            y = self.mono
+            if data is None:  # Default to self.mono if no data is provided
+                data = self.mono
+            x = np.linspace(0, len(data) / self.sample_rate, len(data))
+            y = data
             fig = plt.Figure(figsize=(8, 4))
             ax = fig.add_subplot(111)
-            ax.plot(x, y, label="RT60 Line Graph", color="pink")
             if highlight_point == "low":
-                ax.scatter([x[np.argmin(y)]], [np.min(y)], color="lightblue", label="Low Point")
+                ax.plot(x, y, label="RT60 Line Graph", color="cornflowerblue")
+                ax.scatter([x[np.argmax(y)]], [np.max(y)], 30, color="blue", label="Low Point")
             elif highlight_point == "mid":
-                mid_idx = len(x) // 2
-                ax.scatter([x[mid_idx]], [y[mid_idx]], color="lightgreen", label="Mid Point")
+                ax.plot(x, y, label="RT60 Line Graph", color="limegreen")
+                ax.scatter([x[np.argmax(y)]], [np.max(y)], 30, color="green", label="Mid Point")
             elif highlight_point == "high":
-                ax.scatter([x[np.argmax(y)]], [np.max(y)], color="tomato", label="High Point")
+                ax.plot(x, y, label="RT60 Line Graph", color="tomato")
+                ax.scatter([x[np.argmax(y)]], [np.max(y)], 30, color="red", label="High Point")
             ax.set_title(title)
             ax.set_xlabel("Time (s)")
             ax.set_ylabel("Amplitude")
             ax.legend()
             ax.grid(True)
+
             return fig
+
 
         except Exception as e:
             print(f"Error plotting RT60: {e}")
             return None
-        
-    def plot_low_rt60(self): #rt60 low plot function
-        if self.mono is None:
-            return None
-        return self.plot_rt60("Low RT60", highlight_point="low")
-
-    def plot_mid_rt60(self): #rt60 mid plot function
-        if self.mono is None:
-            return None
-        return self.plot_rt60("Mid RT60", highlight_point="mid")
-
-    def plot_high_rt60(self): #rt60 high plot function
-        if self.mono is None:
-            return None
-        return self.plot_rt60("High RT60", highlight_point="high")
 
     def resonant_freq(self):
         frequencies, power = welch(self.data, self.sample_rate, nperseg=4096)
