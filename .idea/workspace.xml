@@ -4,9 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fcfe684b-b67e-40a1-9dc2-37a3bb191edf" name="Changes" comment="Mass changes, implementing Util Class and adjusted the FilePLotter.py">
+    <list default="true" id="fcfe684b-b67e-40a1-9dc2-37a3bb191edf" name="Changes" comment="Implemented additional buttons, added their functionality with filePlotter.py, moved code from util.py into filePlotter.py.">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GUI.py" beforeDir="false" afterPath="$PROJECT_DIR$/GUI.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/filePlotter.py" beforeDir="false" afterPath="$PROJECT_DIR$/filePlotter.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/util.py" beforeDir="false" afterPath="$PROJECT_DIR$/util.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,17 +38,17 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.GUI.executor": "Run",
-    "Python.Run.executor": "Run",
-    "Python.main.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master",
-    "last_opened_file_path": "C:/Users/zabin/FinalProject/WAVIZ/.venv/Scripts",
-    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.GUI.executor&quot;: &quot;Run&quot;,
+    &quot;Python.Run.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/zabin/FinalProject/WAVIZ/.venv/Scripts&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\zabin\FinalProject\WAVIZ\.venv\Scripts" />
@@ -84,7 +86,15 @@
       <option name="project" value="LOCAL" />
       <updated>1733540323039</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Implemented additional buttons, added their functionality with filePlotter.py, moved code from util.py into filePlotter.py.">
+      <option name="closed" value="true" />
+      <created>1733554740623</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1733554740623</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -100,6 +110,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Mass changes, implementing Util Class and adjusted the FilePLotter.py" />
-    <option name="LAST_COMMIT_MESSAGE" value="Mass changes, implementing Util Class and adjusted the FilePLotter.py" />
+    <MESSAGE value="Implemented additional buttons, added their functionality with filePlotter.py, moved code from util.py into filePlotter.py." />
+    <option name="LAST_COMMIT_MESSAGE" value="Implemented additional buttons, added their functionality with filePlotter.py, moved code from util.py into filePlotter.py." />
   </component>
 </project>

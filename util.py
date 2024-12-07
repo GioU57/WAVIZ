@@ -41,7 +41,7 @@ def analyze_audio(file):
     if len(data.shape) == 2:
         left_channel = data[:, 0]
         right_channel = data[:, 1]
-        mono = (left_channel + right_channel)
+        mono = (left_channel + right_channel)/2
     else:
         mono = data
     return sample_rate, data, mono
@@ -51,10 +51,7 @@ def reverb_time(data):
     rt60 = 3 * rt20
     print(f'RT60 value is {round(rt60)}')
     
-def resonant_freq(data):
-    frequencies, power = welch(data, sample_rate, nperseg=4096)
-    dominant_frequency = frequencies[np.argmax(power)]
-    print(f'dominant frequency is {round(dominant_frequency)}Hz')
+
 
 def amplitude(data):
     index_of_max = np.argmax(data_in_db)
