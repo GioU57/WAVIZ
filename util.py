@@ -46,8 +46,22 @@ def analyze_audio(file):
         mono = data
     return sample_rate, data, mono
 
-def reverb_time(data):
-    rt20 = t[index_of_max_less_5] - t[index_of_max_less_25]
+def find_nearest_value(array, value):
+    array = np.asarray(array)
+    idx = (np.abs(array - value)).argmin()
+    return array[idx]
+
+def reverb_time(model):
+    # Reverb time
+    value_of_max_less_5 = model.mono[np.argmax(model.mono)]-5
+    value_of_max_less_5 = find_nearest_value(model.mono[value_of_max_less_5:], value_of_max_less_5)
+    index_of_max_less_5 = np.where(model.mono == value_of_max_less_5)[0][0]
+
+    value_of_max_less_25 = model.mono[np.argmax(model.mono)]-25
+    value_of_max_less_25 = find_nearest_value(model.mono[value_of_max_less_25:], value_of_max_less_25)
+    index_of_max_less_25 = np.where(model.mono == value_of_max_less_25)[0][0]
+    
+    rt20 = (index_of_max_less_25 - index_of_max_less_5)/len(model.mono) * model.duration
     rt60 = 3 * rt20
     print(f'RT60 value is {round(rt60)}')
     

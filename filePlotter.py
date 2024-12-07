@@ -65,12 +65,12 @@ class Model:
             y = self.mono
             fig = plt.Figure(figsize=(8, 4))
             ax = fig.add_subplot(111)
-            ax.plot(x, y, label="RT60 Line Graph", color="black")
+            ax.plot(x, y, label="RT60 Line Graph", color="pink")
             if highlight_point == "low":
-                ax.scatter([x[np.argmin(y)]], [np.min(y)], color="cadetblue", label="Low Point")
+                ax.scatter([x[np.argmin(y)]], [np.min(y)], color="lightblue", label="Low Point")
             elif highlight_point == "mid":
                 mid_idx = len(x) // 2
-                ax.scatter([x[mid_idx]], [y[mid_idx]], color="lime", label="Mid Point")
+                ax.scatter([x[mid_idx]], [y[mid_idx]], color="lightgreen", label="Mid Point")
             elif highlight_point == "high":
                 ax.scatter([x[np.argmax(y)]], [np.max(y)], color="tomato", label="High Point")
             ax.set_title(title)
