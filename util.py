@@ -5,15 +5,8 @@ from pydub import AudioSegment
 from scipy.io import wavfile
 from scipy.signal import butter, filtfilt, welch
 from pathlib import Path
-import matplotlib.pyplot as plt
 
-def digital_to_decibel(signal):
-    if signal > 0:
-        return 10 * np.log10(signal)
-    else:
-        return 0
-
-# Check filetype
+# Checks filetype to see if it is wav. If not, calls convert function.
 def check_filetype(file):
     extension = Path(file).suffix.lower()
     if extension == ".wav":
@@ -22,7 +15,7 @@ def check_filetype(file):
         sample_rate, data, mono = convert_file(file, extension)
     return sample_rate, data, mono
 
-# Convert filetype
+# Converts filetype from mp3 or ogg to wav and returns the data
 def convert_file(file, extension):
     if extension == ".mp3":
         AudioSegment.from_mp3(file).export("newfile.wav", format = "wav")
@@ -35,6 +28,7 @@ def convert_file(file, extension):
 
     return sample_rate, data, mono
 
+# Checks if audio is mono. If it is stereo, it sums the channels into a single mono channel.
 def analyze_audio(file):
     sample_rate, data = wavfile.read(file)
     if len(data.shape) == 2:
@@ -45,11 +39,7 @@ def analyze_audio(file):
         mono = data
     return sample_rate, data, mono
 
-def find_nearest_value(array, value):
-    array = np.asarray(array)
-    idx = (np.abs(array - value)).argmin()
-    return array[idx]
-
+# Calculates the RT60 reverb time using the less than 5 and less than 25 indices.
 def reverb_time(model):
     # Reverb time
     value_of_max_less_5 = model.mono[np.argmax(model.mono)]-5
@@ -65,16 +55,18 @@ def reverb_time(model):
     print(f'RT60 value is {round(rt60)}')
     
 
-
+# Calculates the amplitude of the sound file by returning the value of the max amplitude.
 def amplitude(data):
     index_of_max = np.argmax(data_in_db)
     value_of_max = data_in_db[index_of_max]
     return value_of_max
 
+# Captures frequency in a range of audio data.
 def find_target_frequency(freqs, target=1000):
     nearest_freq = freqs[np.abs(freqs - target).argmin()]
     return nearest_freq
 
+#Redundant bandpass_filter
 def bandpass_filter(data, lowcut, highcut, fs, order=4):
     nyquist = 0.5 * fs
     low = lowcut / nyquist
@@ -82,11 +74,13 @@ def bandpass_filter(data, lowcut, highcut, fs, order=4):
     b, a = butter(order, [low, high], btype='band')
     return filtfilt(b, a, data)
 
+#Function require in the rt60 calculation used in this file.
 def find_nearest_value(array, value):
     array = np.asarray(array)
     idx = (np.abs(array - value)).argmin()
     return array[idx]
 
+#RT60 function that captures specific values from the data plot used in the GUI to display target frequency and resonance data
 def rt60(filepath):
     # Load the audio file
     sample_rate, data, mono = check_filetype(filepath)

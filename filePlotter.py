@@ -90,8 +90,8 @@ class Model:
 
         # Apply bandpass filter for high frequencies (7 kHz to 15 kHz)
         return 20*(np.log10(np.abs(self.bandpass_filter(10000, 20000, self.sample_rate))))
-        #return self.plot_rt60("High RT60", highlight_point='high', data=filtered_data)
 
+    #band_pass filter for the model class
     def bandpass_filter(self, lowcut, highcut, fs, order=4):
         nyquist = 0.5 * fs
         low = lowcut / nyquist
@@ -109,19 +109,25 @@ class Model:
             low_axis.plot(x, low_y,label="RT60 Line Graph", color="cornflowerblue")
             low_axis.scatter([x[np.argmax(low_y)]], [np.max(low_y)], 30, color="blue", label="Low Point")
 
+            #Labels for the low rt60 plot
             low_axis.set_title("Mid RT60")
             low_axis.set_xlabel("Time (s)")
             low_axis.set_ylabel("Amplitude (dB)")
+            low_axis.legend()
 
+
+            #Med rt60 plot creation
             fig_mid = plt.Figure(figsize=(8, 4))
             mid_axis = fig_mid.add_subplot(111)
             mid_y = self.plot_mid_rt60()
             mid_axis.plot(x, mid_y, label="RT60 Line Graph", color="limegreen")
             mid_axis.scatter([x[np.argmax(mid_y)]], [np.max(mid_y)], 30, color="green", label="Low Point")
 
+            #Mid rt60 labels
             mid_axis.set_title("Mid RT60")
             mid_axis.set_xlabel("Time (s)")
             mid_axis.set_ylabel("Amplitude (dB)")
+            mid_axis.legend()
 
             #Establish the figure for the high RT60 model
             fig_high = plt.Figure(figsize=(8, 4))
@@ -134,7 +140,9 @@ class Model:
             high_axis.set_title("High RT60")
             high_axis.set_xlabel("Time (s)")
             high_axis.set_ylabel("Amplitude (dB)")
+            high_axis.legend()
 
+            #Take the plots generated in this function and then combine them into one file.
             fig_all = plt.Figure(figsize=(8, 4))
             all_axis = fig_all.add_subplot(111)
             all_axis.plot(x, low_y, label="RT60 Line Graph", color="cornflowerblue")
@@ -144,43 +152,16 @@ class Model:
             all_axis.plot(x, high_y, label="RT60 Line Graph", color="tomato")
             all_axis.scatter([x[np.argmax(high_y)]], [np.max(high_y)], 30, color="red", label="Low Point")
 
+            #Set titles for the combined RT60 plot
             all_axis.set_title("Combined RT60")
             all_axis.set_xlabel("Time (s)")
             all_axis.set_ylabel("Amplitude (dB)")
+            all_axis.legend()
 
             return (fig_low,fig_mid,fig_high,fig_all)
 
+    #Funtion called in the plot_wave function in the GUI to gather resonant frequency
     def resonant_freq(self):
         frequencies, power = welch(self.mono, self.sample_rate, nperseg=4096)
         dominant_frequency = frequencies[np.argmax(power)]
         return round(dominant_frequency)
-
-"""
-            #Mid RT60
-            data = self.plot_mid_rt60()
-            x = np.linspace(0, len(data) / self.sample_rate, len(data))
-            y = data
-            fig1 = plt.Figure(figsize=(8, 4))
-            ax = fig.add_subplot(111)
-            ax.plot(x, y, label="RT60 Line Graph", color="limegreen")
-            ax.scatter([x[np.argmax(y)]], [np.max(y)], 30, color="green", label="Mid Point")
-        elif highlight_point == "high":
-            ax.plot(x, y, label="RT60 Line Graph", color="tomato")
-            ax.scatter([x[np.argmax(y)]], [np.max(y)], 30, color="red", label="High Point")
-        elif highlight_point == "all":
-            x = np.linspace(0, len(y[0]) / self.sample_rate, len(y[0]))
-            ax.plot(x, y[0], label="RT60 Line Graph", color="cornflowerblue")
-            ax.scatter([x[np.argmax(y[0])]], [np.max(y[0])], 30, color="blue", label="Low Point")
-            ax.plot(x, y[1], label="RT60 Line Graph", color="limegreen")
-            ax.scatter([x[np.argmax(y[1])]], [np.max(y[1])], 30, color="green", label="Mid Point")
-            ax.plot(x, y[2], label="RT60 Line Graph", color="tomato")
-            ax.scatter([x[np.argmax(y[2])]], [np.max(y[2])], 30, color="red", label="High Point")
-
-            ax.set_title(title)
-            ax.set_xlabel("Time (s)")
-            ax.set_ylabel("Amplitude")
-            ax.legend()
-            ax.grid(True)
-
-            return fig
-            """
