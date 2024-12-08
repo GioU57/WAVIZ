@@ -145,13 +145,15 @@ class Model:
             #Take the plots generated in this function and then combine them into one file.
             fig_all = plt.Figure(figsize=(8, 4))
             all_axis = fig_all.add_subplot(111)
-            all_axis.plot(x, low_y, label="RT60 Line Graph", color="cornflowerblue")
-            all_axis.scatter([x[np.argmax(low_y)]], [np.max(low_y)], 30, color="blue", label="Low Point")
-            all_axis.plot(x, mid_y, label="RT60 Line Graph", color="limegreen")
-            all_axis.scatter([x[np.argmax(mid_y)]], [np.max(mid_y)], 30, color="green", label="Low Point")
-            all_axis.plot(x, high_y, label="RT60 Line Graph", color="tomato")
-            all_axis.scatter([x[np.argmax(high_y)]], [np.max(high_y)], 30, color="red", label="Low Point")
+            
+            all_axis.plot(x, low_y, label="Low RT60", color="cornflowerblue")
+            all_axis.plot(x, mid_y, label="Mid RT60", color="limegreen")
+            all_axis.plot(x, high_y, label="High RT60", color="tomato")
 
+            all_axis.scatter([x[np.argmax(low_y)]], [np.max(low_y)], 30, color="blue", label="Low Point")
+            all_axis.scatter([x[np.argmax(mid_y)]], [np.max(mid_y)], 30, color="green", label="Mid Point")
+            all_axis.scatter([x[np.argmax(high_y)]], [np.max(high_y)], 30, color="red", label="High Point") 
+            
             #Set titles for the combined RT60 plot
             all_axis.set_title("Combined RT60")
             all_axis.set_xlabel("Time (s)")
